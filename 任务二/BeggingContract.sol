@@ -19,18 +19,29 @@ contract BeggingContract{
     constructor(){
         owner = msg.sender;
     }
-    // // 修饰符：限制只有所有者可调用
+    //修饰符：限制只有所有者可调用
     modifier onlyOwner(){
         require(msg.sender ==owner, "only owner can use");
         _;
 
     }
-    //允许用户向合约发送以太币，并记录捐赠信息。
+    //用户向合约发送以太币，并记录捐赠信息。
     function donate() external payable{
         // 校验捐赠金额
         require(msg.value>0,"donate money must greater 0");
         // 记录捐赠金额
         donateMap[msg.sender] += msg.value;
     }
-
+    //合约所有者提取所有资金
+    function withdraw() external onlyOwner{
+        uint256 balance = address(this).balance;
+        //校验金额
+        require(balance>0, "withdraw amt must greater 0");
+        // 将合约余额转移给所有者
+        payable(owner).transfer(balance);
+    }
+    //查询某个地址的捐赠金额
+    function getDonation(address donateAddress) external view returns(uint256){
+        return donateMap[donateAddress];
+    }
 }

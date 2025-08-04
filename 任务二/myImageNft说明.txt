@@ -1,0 +1,72 @@
+1. 编写符合 ERC721 标准的 NFT 合约
+下面是使用 OpenZeppelin 库实现的 NFT 合约，包含铸造功能并支持元数据关联：
+ERC721 NFT合约
+V1
+创建时间：12:32
+合约功能说明
+构造函数：设置 NFT 集合的名称（"My Art NFT"）和符号（"ART"）
+mintNFT 函数：仅合约所有者可调用，用于铸造新 NFT 并关联元数据
+参数 1：接收 NFT 的地址
+参数 2：IPFS 上的元数据 JSON 文件链接
+tokenURI 重写：提供 NFT 元数据的访问能力
+所有权控制：通过 Ownable 确保只有合约部署者可以铸造 NFT
+在 Remix IDE 中编译合约
+打开 Remix IDE（https://remix.ethereum.org/）
+创建新文件MyNFT.sol并粘贴上述代码
+安装 OpenZeppelin 库：
+点击左侧 "Plugin Manager"
+搜索并安装 "OpenZeppelin" 插件
+编译合约：
+选择编译器版本 0.8.17
+点击 "Compile MyNFT.sol"
+确保编译成功（无错误提示）
+2. 上传图文数据到 IPFS
+准备工作
+准备一张图片（建议分辨率适中，如 500x500 像素）
+创建元数据 JSON 文件
+步骤：
+创建元数据文件（例如nft-metadata.json）：
+json
+{
+  "name": "Sunset Landscape",
+  "description": "A beautiful sunset over mountains",
+  "image": "ipfs://QmY...替换为你的图片IPFS哈希",
+  "attributes": [
+    {"trait_type": "Style", "value": "Landscape"},
+    {"trait_type": "Mood", "value": "Peaceful"},
+    {"trait_type": "Color", "value": "Orange"}
+  ]
+}
+上传图片到 IPFS：
+使用 Pinata（https://pinata.cloud/）免费服务
+注册账号并登录
+点击 "Upload" -> "File" 上传你的图片
+上传完成后，获取图片的 IPFS 哈希（如QmYwFd...）
+更新并上传元数据：
+将图片的 IPFS 链接填入元数据 JSON 的image字段
+上传元数据 JSON 文件到 IPFS
+保存元数据的 IPFS 链接（后续铸造需要）
+3. 部署合约到测试网
+准备测试网环境：
+MetaMask 钱包切换到 Sepolia 测试网
+通过水龙头获取测试 ETH（如https://sepoliafaucet.com/）
+部署步骤：
+在 Remix 中切换到 "Deploy & Run Transactions" 标签
+环境选择 "Injected Provider - MetaMask"
+确认连接到 Sepolia 测试网
+选择 "MyNFT" 合约，点击 "Deploy"
+确认 MetaMask 中的交易
+等待部署完成，记录合约地址
+4. 铸造 NFT 并查看
+铸造 NFT：
+在 Remix 的已部署合约中找到你的 MyNFT 合约
+展开mintNFT函数
+第一个参数：输入接收 NFT 的地址（通常是你的钱包地址）
+第二个参数：输入元数据的 IPFS 链接（如ipfs://QmZ...）
+点击 "transact" 并确认 MetaMask 交易
+在测试网查看：
+打开 OpenSea 测试网：https://testnets.opensea.io/
+连接你的钱包
+导航到 "Collected" 页面查看你的 NFT
+稍等几分钟（IPFS 和区块链同步需要时间），即可看到带图片的 NFT
+通过以上步骤，你就完成了在测试网上发行图文并茂 NFT 的全过程。这个流程与主网发行 NFT 的步骤基本一致，只是使用测试网 ETH 和测试环境进行操作。

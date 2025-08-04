@@ -1,0 +1,10 @@
+{
+  "name": "My image nft",
+  "description": "create a new image about my nft",
+  "image": "ipfs://bafybeialqmxak7egf4u7k5i5soxmrgaabm2afnrr5bk7ggxvzcn3h4giw4",
+  "attributes": [
+     {"trait_type": "Style", "value": "Landscape"},
+    {"trait_type": "Mood", "value": "Peaceful"},
+    {"trait_type": "Color", "value": "Orange"}
+  ]
+}

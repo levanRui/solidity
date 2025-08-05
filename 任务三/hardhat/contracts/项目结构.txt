@@ -1,0 +1,12 @@
+hardhat/
+├── contracts/
+│   ├── MyNFT.sol             # ERC721 NFT合约
+│   ├── Auction.sol         # 拍卖合约（支持UUPS升级）
+│   ├── AuctionFactory.sol  # 拍卖工厂模式
+│   ├── PriceConsumer.sol   # Chainlink价格获取
+│   └── mocks/              # 测试用模拟合约
+├── scripts/
+│   ├── deploy.js           # 部署脚本
+│   └── upgrade.js          # 合约升级脚本
+├── test/                   # 测试文件
+└── hardhat.config.js       # Hardhat配置

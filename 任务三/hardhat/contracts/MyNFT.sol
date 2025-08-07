@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
-// 导入OpenZeppelin的ERC721实现和Ownable用于权限管理
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 contract MyNFT is ERC721, Ownable {

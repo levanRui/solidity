@@ -3,11 +3,16 @@ pragma solidity ^0.8.17;
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+<<<<<<< HEAD
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 
 using SafeERC20 for IERC20;
 
+=======
+import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
+
+>>>>>>> origin/main
 import "hardhat/console.sol";
 
 contract Auction{
@@ -20,7 +25,11 @@ contract Auction{
     // 定义拍卖信息结构体
     struct AuctionInfo{
         address seller;// 卖家地址
+<<<<<<< HEAD
         address nftContract;//NFT合约地址
+=======
+        address nftContractAddress;//NFT合约地址
+>>>>>>> origin/main
         uint256 tokenId;//NFT id
         uint256 startPrice;//起始价格
         uint256 highestBid;//最高出价
@@ -46,7 +55,11 @@ contract Auction{
         // 创建拍卖信息
         AuctionInfo memory auction = AuctionInfo({
             seller: msg.sender,
+<<<<<<< HEAD
             nftContract: nftAddress,
+=======
+            nftContractAddress: nftAddress,
+>>>>>>> origin/main
             tokenId: tokenId,
             startPrice: startPrice,
             highestBid: 0,
@@ -62,12 +75,17 @@ contract Auction{
     function placeBid(uint256 auctionID) external payable{
         uint256 bidAmount; 
         AuctionInfo storage auctionInfo = auctionMap[auctionID] ;
+<<<<<<< HEAD
         if(auctionInfo.paymentToken== address(0)){
+=======
+        if(auctionInfo.nftContractAddress== address(0)){
+>>>>>>> origin/main
             //1.支付方式为ETH
             require(msg.value > auctionInfo.highestBid, "Bid must be higher than 0");
             bidAmount = msg.value;
         }else{
             // 2.支付方式为ERC20
+<<<<<<< HEAD
             require(msg.value == 0, "Bid must be in ERC20 token");
 
             // 计算收到的代币数量
@@ -82,6 +100,19 @@ contract Auction{
         require(bidAmount > auctionInfo.highestBid, "Bid must be higher than current highest bid");
     }
   
+=======
+
+            // 计算收到的代币数量
+            uint256 tokenAmount = IERC20(auctionInfo.nftContractAddress).balanceOf(msg.sender);
+        }
+
+
+        // 检查拍卖是否存在，是否在活动中
+        // 检查出价是否高于当前最高出价
+        // 更新最高出价和最高出价者
+        // 这里可以添加逻辑来处理出价
+    }
+>>>>>>> origin/main
     //3.结束拍卖：拍卖结束后，NFT 转移给出价最高者，资金转移给卖家
 
 }

@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
-// 导入OpenZeppelin的ERC721实现和Ownable用于权限管理
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+
+
 contract MyNFT is ERC721, Ownable {
     uint256 public nftTokenCounter;
     // 构造函数：初始化NFT名称和符号，设置部署者为所有者
@@ -12,7 +13,16 @@ contract MyNFT is ERC721, Ownable {
         address initialOwner
     ) ERC721(name, symbol) Ownable(initialOwner) {
         nftTokenCounter = 1; 
-        initialOwner = msg.sender; // 设置初始所有者为部署者
+    }
+    // 初始化函数，供可升级合约使用
+    function initialize(
+        string memory name, 
+        string memory symbol,
+        address initialOwner
+    ) public {
+        require(nftTokenCounter == 0, "Already initialized");
+        _transferOwnership(initialOwner);
+        nftTokenCounter = 1; 
     }
     // 铸造NFT
     function mintNFT(address toAddress) public onlyOwner returns (uint256) {

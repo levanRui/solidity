@@ -2,9 +2,10 @@
 pragma solidity ^0.8.17;
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/proxy/Clones.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "./Auction.sol";
 import "./UpgradeBaseAuction.sol";
-contract AuctionFactory is UpgradeBaseAuction {
+contract AuctionFactory is Initializable, UpgradeBaseAuction {
     using Clones for address;// 方便使用克隆方法
     // 定义拍卖合约实现地址
     address public auctionImplAddress;
@@ -71,12 +72,12 @@ contract AuctionFactory is UpgradeBaseAuction {
             nftAddress,
             tokenId,
             seller,
+            startPrice,
             paymentToken,
             startTime,
             endTime,
-            startPrice,
-            feedPrice,
             duration,
+            feedPrice,
             factory
         );
         // 记录拍卖

@@ -51,9 +51,9 @@ contract AuctionFactory is Initializable, UpgradeBaseAuction {
         uint256 startTime,
         uint256 endTime,
         uint256 startPrice,// 起始价格 美元18位小数
-        address feedPrice, // 价格预言机地址
         uint256 duration,
-        address factory
+        address feedPrice, // 价格预言机地址
+        address factoryAddress
     ) public returns (address) {
         require(nftCurrentAuction[nftAddress][tokenId] != address(0), "Invalid NFT address");
         require(duration > 0, "Duration must be greater than 0");
@@ -67,23 +67,23 @@ contract AuctionFactory is Initializable, UpgradeBaseAuction {
         "AuctionFactory is not approved to transfer this NFT");
         // 创建拍卖合约
         address newAuction = auctionImplAddress.clone();
+        // 记录拍卖（先更新状态，防止重入）
+        nftCurrentAuction[nftAddress][tokenId] = newAuction;
+        allAuctions.push(newAuction);
+        userAuctions[seller].push(newAuction);
         // 初始化拍卖合约
         Auction(newAuction).initialize(
             nftAddress,
             tokenId,
             seller,
-            startPrice,
             paymentToken,
             startTime,
             endTime,
+            startPrice,
             duration,
             feedPrice,
-            factory
+            factoryAddress
         );
-        // 记录拍卖
-        nftCurrentAuction[nftAddress][tokenId] = newAuction;
-        allAuctions.push(newAuction);
-        userAuctions[seller].push(newAuction);
         // 触发事件
         emit AuctionDeployed(newAuction, nftAddress, tokenId, seller);
 

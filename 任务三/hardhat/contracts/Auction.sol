@@ -7,11 +7,13 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 import "./FeedPrice.sol";
+// 引入OpenZeppelin的重入保护
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 using SafeERC20 for IERC20;
 
 import "hardhat/console.sol";
 
-contract Auction is Initializable{
+contract Auction is Initializable, ReentrancyGuard{
     FeedPrice public feedPrice;
     address public factoryAddress; // 工厂地址
     // 定义拍卖状态
@@ -35,13 +37,13 @@ contract Auction is Initializable{
     }
     // 初始化 
     function initialize(
-         address nftAddress,
+        address nftAddress,
         uint256 tokenId,
         address seller, // 卖家地址
-        uint256 startPrice,
         address paymentToken, // 支付代币地址
         uint256 startTime, // 开始时间
         uint256 endTime, // 结束时间   
+        uint256 startPrice,
         uint256 duration,
         address feedPrice, // 价格预言机地址
         address factoryAddress // 工厂地址
@@ -114,22 +116,31 @@ contract Auction is Initializable{
         require(auctionInfo.status == AuctionStatus.Active, "Auction is not active");
         require(block.timestamp >= auctionInfo.endTime, "Auction has not ended yet");
         
-        // 更新拍卖状态
+        // 先保存必要信息到本地变量，避免外部调用前的状态变化
+        address nftContract = auctionInfo.nftContract;
+        uint256 tokenId = auctionInfo.tokenId;
+        address seller = auctionInfo.seller;
+        address highestBidder = auctionInfo.highestBidder;
+        uint256 highestBid = auctionInfo.highestBid;
+        address paymentToken = auctionInfo.paymentToken;
+
+        // 检查-效果-交互模式，先更新状态
         auctionInfo.status = AuctionStatus.Ended;
 
         // 如果有最高出价者，转移NFT和资金
-        if (auctionInfo.highestBidder != address(0)) {
-            // 转移NFT给最高出价者
-            IERC721(auctionInfo.nftContract).transferFrom(auctionInfo.seller, auctionInfo.highestBidder, auctionInfo.tokenId);
-            // 转移资金给卖家
-            if (auctionInfo.paymentToken == address(0)) {
-                payable(auctionInfo.seller).transfer(auctionInfo.highestBid);
+        if (highestBidder != address(0)) {
+            // 先转移NFT给最高出价者
+            IERC721(nftContract).safeTransferFrom(address(this), highestBidder, tokenId);
+            // 再转移资金给卖家
+            if (paymentToken == address(0)) {
+                (bool sent, ) = payable(seller).call{value: highestBid}("");
+                require(sent, "Failed to send Ether to seller");
             } else {
-                IERC20(auctionInfo.paymentToken).safeTransfer(auctionInfo.seller, auctionInfo.highestBid);
+                IERC20(paymentToken).safeTransfer(seller, highestBid);
             }
         } else {
             // 如果没有出价者，NFT返回给卖家
-            IERC721(auctionInfo.nftContract).transferFrom(address(this), auctionInfo.seller, auctionInfo.tokenId);
+            IERC721(nftContract).safeTransferFrom(address(this), seller, tokenId);
         }
     }
 

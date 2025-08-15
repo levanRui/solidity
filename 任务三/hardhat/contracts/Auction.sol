@@ -8,12 +8,13 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 import "./FeedPrice.sol";
 // 引入OpenZeppelin的重入保护
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+//import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@chainlink/contracts/node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol";
 using SafeERC20 for IERC20;
-
+    
 import "hardhat/console.sol";
 
-contract Auction is Initializable, ReentrancyGuard{
+contract Auction is Initializable{
     FeedPrice public feedPrice;
     address public factoryAddress; // 工厂地址
     // 定义拍卖状态

@@ -22,7 +22,8 @@ npx hardhat ignition deploy ./ignition\modules\Lock.js --network sepolia   //部
 重复部署问题：reset
 7.npx hardhat ignition deploy ./ignition/modules/Lock.js --network sepolia  --reset
 
-
+// 部署合约
+npx hardhat deploy --tags deployNftAuction
 
 // 拍卖流程
 1.拍卖创建

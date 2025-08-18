@@ -18,7 +18,7 @@ module.exports = async ({getNamedAccounts, deployments})=>{
     const UpgradeMyNFT = await ethers.getContractFactory("UpgradeMyNFT");
     const upgradeMyNFT = await upgrades.deployProxy(
         UpgradeMyNFT, 
-        ["MyAuctionMarketNFT", "AMNFT",deployer], {
+        ["MyAuctionMarketNFT", "AMNFT","100", "https://my-nft-uri.com/metadata/"], {
         initializer: "initializeV2",
         kind: "transparent" //代理类型，可选 'transparent' 或 'uups'
     });

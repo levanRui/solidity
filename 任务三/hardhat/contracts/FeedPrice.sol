@@ -3,7 +3,9 @@ pragma solidity ^0.8.17;
 //import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-contract FeedPrice is Ownable {
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "./UpgradeAuction.sol";
+contract FeedPrice is Initializable,OwnableUpgradeable {
     // Custom errors
     error PriceFeedNotSet();
     error InvalidPrice();
@@ -12,10 +14,13 @@ contract FeedPrice is Ownable {
     // 存储价格喂价合约地址
     mapping(address => address) public priceFeedMap;
     // ETH/USD喂价地址
-    address public ETH_USD_PRICE_FEED = 0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419;
+    address public ETH_USD_PRICE_FEED;
 
-    // 构造函数，显式传递初始owner
-    constructor(address initialOwner) Ownable(initialOwner) {}
+    // 初始化函数，设置初始owner和ETH/USD喂价地址
+    function initialize(address _ethUsdPriceFeed) external initializer {
+        __Ownable_init();
+        ETH_USD_PRICE_FEED = _ethUsdPriceFeed;
+    }
 
     // 1.设置ERC20代币的喂价
     function setPriceFeed(address token, address feedAddress) public {

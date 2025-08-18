@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
-import "./MyNFT.sol";
+import "./MyNFTUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 /**
@@ -8,16 +8,12 @@ import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
  * @dev 升级后的合约，将原有NFT合约升级为ERC20标准代币
  * 使用透明代理模式实现可升级性
  */
-contract UpgradeMyNFT is MyNFT, Initializable {
+contract UpgradeMyNFT is Initializable, OwnableUpgradeable, MyNFTUpgradeable {
     // 新增的状态变量 - 必须放在所有原有状态变量之后
     uint256 private maxTotalSupply;
     // 新增状态变量：NFT基础URI
     string public baseURI;
-    constructor(
-        string memory name,
-        string memory symbol,
-        address initialOwner
-    ) MyNFT(name, symbol, initialOwner) {}
+
     // 1.初始化函数，供可升级合约使用
     // 注意：此函数只能被调用一次，且必须在合约部署后立即调用
     // 这里使用了initializer修饰符，确保该函数只能被调用一次
@@ -28,7 +24,8 @@ contract UpgradeMyNFT is MyNFT, Initializable {
         uint256 _maxTotalSupply,
         string calldata _baseURI
     ) public initializer {
-        MyNFT.initialize(name, symbol, initialOwner);
+        __Ownable_init();
+        MyNFTUpgradeable.initialize(name, symbol, initialOwner);
         maxTotalSupply = _maxTotalSupply;
         baseURI = _baseURI;
     }

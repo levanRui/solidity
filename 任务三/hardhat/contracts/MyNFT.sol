@@ -15,15 +15,14 @@ contract MyNFT is ERC721, Ownable {
         nftTokenCounter = 1; 
     }
     // 初始化函数，供可升级合约使用
-    function initialize(
-        string memory name, 
-        string memory symbol,
-        address initialOwner
-    ) public {
-        require(nftTokenCounter == 0, "Already initialized");
-        _transferOwnership(initialOwner);
-        nftTokenCounter = 1; 
-    }
+    // function initialize(
+    //     string memory name, 
+    //     string memory symbol
+    // ) public {
+    //     require(nftTokenCounter == 0, "Already initialized");
+    //     //_transferOwnership(initialOwner);
+    //     nftTokenCounter = 1; 
+    // }
     // 铸造NFT
     function mintNFT(address toAddress) public onlyOwner returns (uint256) {
         uint256 newTokenId = nftTokenCounter;

@@ -4,8 +4,8 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/proxy/Clones.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "./Auction.sol";
-import "./UpgradeBaseAuction.sol";
-contract AuctionFactory is Initializable, UpgradeBaseAuction {
+import "./UpgradeAuction.sol";
+contract AuctionFactory is Initializable {
     using Clones for address;// 方便使用克隆方法
     // 定义拍卖合约实现地址
     address public auctionImplAddress;

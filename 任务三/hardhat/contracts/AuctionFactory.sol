@@ -5,11 +5,7 @@ import "@openzeppelin/contracts/proxy/Clones.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "./Auction.sol";
 import "./UpgradeAuction.sol";
-<<<<<<< HEAD
-contract AuctionFactory is Initializable, UpgradeAuction {
-=======
 contract AuctionFactory is Initializable {
->>>>>>> d9d2b9b5ccbb4a34b89dfb6e4b3c5fb7f586f44c
     using Clones for address;// 方便使用克隆方法
     // 定义拍卖合约实现地址
     address public auctionImplAddress;

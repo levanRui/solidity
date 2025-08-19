@@ -32,5 +32,6 @@ module.exports = async ({getNamedAccounts, deployments})=>{
         address: proxyAddress,
         abi: auction.interface.format("json")
     });
+    
 };
 module.exports.tags = ["deployAuction"];
